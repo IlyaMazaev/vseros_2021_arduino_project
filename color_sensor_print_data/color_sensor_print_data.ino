@@ -27,8 +27,8 @@ Servo servo_0;
 #define LIGHT_SENSOR_2_PIN   7
 
 #define SENSOR_0_HUB_PIN   0 
-#define SENSOR_1_HUB_PIN   2
-#define SENSOR_2_HUB_PIN   6
+#define SENSOR_1_HUB_PIN   4
+#define SENSOR_2_HUB_PIN   7
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -93,28 +93,48 @@ analogWrite(LIGHT_SENSOR_1_PIN,0);
 analogWrite(LIGHT_SENSOR_2_PIN,0);
  
 }
+
+
+
 void loop() {
   servo_0_mini.write(180);
   servo_1_mini.write(180);
   servo_2_mini.write(180);
   
   int buttonState = digitalRead(BUTTON_PIN);
+  // ожидание нажатия кнопки 
   while (buttonState){
     buttonState = digitalRead(BUTTON_PIN);
-    delay (100);
-  }while (not buttonState){
+  }
+  delay (50);
+  // ожидание отпускания кнопки 
+  while (not buttonState){
     buttonState = digitalRead(BUTTON_PIN);
   }
    
-  scanBoard();
-  if (not checkWin()){
-    closeLineOfTwo();
-    Serial.print(step_pos[0]);
+  scanBoard(); // сканирование поля
+  if (not checkWin()){  // если на поле нет победы
+    makeRandomStep();  // сначала нахожу координаты обычного хода
+    closeLineOfTwo();  // если нужно, то тут координаты хода меняются на координаты закорытия линии из 2х
+    Serial.print(step_pos[0]); // вывод координат хода в консоль
     Serial.print(" ");
     Serial.println(step_pos[1]);
-    makeStep(step_pos[0], step_pos[1]);
+    makeStep(step_pos[0], step_pos[1]);  // кладу шарик в нужную клетку
+  }
+  else{
+   servo_0.write(0);
+   delay (3240);
+   servo_0.write(servo_0_stop_speed);
+   servo_0.write(180);
+   delay (200);
+   servo_0.write(servo_0_stop_speed);
+   servo_0.write(0);
+   delay (200);
+   servo_0.write(servo_0_stop_speed);
   }
 }
+
+
 
 void scanBoard() {  
     // сканирование поля и его перезапись(поле должно находиться в крайнем нижнем положении)
@@ -142,15 +162,15 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[0][0] = 0;
-     }
      if (green_average > color_value){ 
       Serial.print("1");
       board[0][0] = 1;
      }
-     if (blue_average > color_value){
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[0][0] = 0;
+     }
+     else if (blue_average > color_value){
       Serial.print("2");
       board[0][0] = 2;
      }
@@ -171,15 +191,15 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[0][1] = 0;
-     }
      if (green_average > color_value){ 
       Serial.print("1");
       board[0][1] = 1;
      }
-     if (blue_average > color_value){
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[0][1] = 0;
+     }
+     else if (blue_average > color_value){
       Serial.print("2");
       board[0][1] = 2;
      }
@@ -200,15 +220,15 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[0][2] = 0;
-     }
      if (green_average > color_value){ 
       Serial.print("1");
       board[0][2] = 1;
      }
-     if (blue_average > color_value){
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[0][2] = 0;
+     }
+     else if (blue_average > color_value){
       Serial.print("2");
       board[0][2] = 2;
      }
@@ -233,15 +253,15 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[1][0] = 0;
-     }
      if (green_average > color_value){ 
       Serial.print("1");
       board[1][0] = 1;
      }
-     if (blue_average > color_value){
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[1][0] = 0;
+     }
+     else if (blue_average > color_value){
       Serial.print("2");
       board[1][0] = 2;
      }
@@ -262,15 +282,15 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[1][1] = 0;
-     }
      if (green_average > color_value){ 
       Serial.print("1");
       board[1][1] = 1;
      }
-     if (blue_average > color_value){
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[1][1] = 0;
+     }
+     else if (blue_average > color_value){
       Serial.print("2");
       board[1][1] = 2;
      }
@@ -291,13 +311,13 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[1][2] = 0;
-     }
-     else if (green_average > color_value){ 
+     if (green_average > color_value){ 
       Serial.print("1");
       board[1][2] = 1;
+     }
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[1][2] = 0;
      }
      else if (blue_average > color_value){
       Serial.print("2");
@@ -324,13 +344,13 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[2][0] = 0;
-     }
-     else if (green_average > color_value){ 
+     if (green_average > color_value){ 
       Serial.print("1");
       board[2][0] = 1;
+     }
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[2][0] = 0;
      }
      else if (blue_average > color_value){
       Serial.print("2");
@@ -353,14 +373,13 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[2][1] = 0;
-
-     }
-     else if (green_average > color_value){ 
+     if (green_average > color_value){ 
       Serial.print("1");
       board[2][1] = 1;
+     }
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[2][1] = 0;
      }
      else if (blue_average > color_value){
       Serial.print("2");
@@ -383,13 +402,13 @@ void scanBoard() {
      green_average = green_average / 10;
      blue_average = blue_average / 10;
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
-     if (red_average > color_value){
-      Serial.print("0");
-      board[2][2] = 0;
-     }
-     else if (green_average > color_value){ 
+     if (green_average > color_value){ 
       Serial.print("1");
       board[2][2] = 1;
+     }
+     else if (red_average > color_value){
+      Serial.print("0");
+      board[2][2] = 0;
      }
      else if (blue_average > color_value){
       Serial.print("2");
@@ -506,6 +525,20 @@ bool checkWin(){
     if (board[0][2] == 2 and board[1][1] == 2 and board[2][0] == 2) return true;
     return false;
 }
+
+void makeRandomStep() { 
+    // делает шаг в случайную клетку на поле
+    while (1) {  // цикл для подбора рандомных чисел
+      randomSeed(analogRead(A0));
+      int random_i = random(3); 
+      int random_j = random(3);
+      if (board[random_i][random_j] == 0){ // если клетка пустая, то подходит
+        step_pos[0] = random_i;
+        step_pos[1] = random_j;  // хожу в клетку
+        break;
+      }
+    }
+  }
 
 void closeLineOfTwo() { 
     // если стоят 2 подряд фигуры игрока, то предотвращаем победу 
