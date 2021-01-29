@@ -18,7 +18,7 @@ Servo servo_0;
 
 #define BUTTON_PIN  10
 
-#define color_value 245  // нужно для логики определения цветов
+#define color_value 230  // нужно для логики определения цветов
 // если например color.blue > color_value , то я считаю, что показание датчика = синий цвет
 
 // пин подсветки светодиода
@@ -27,8 +27,8 @@ Servo servo_0;
 #define LIGHT_SENSOR_2_PIN   7
 
 #define SENSOR_0_HUB_PIN   0 
-#define SENSOR_1_HUB_PIN   3
-#define SENSOR_2_HUB_PIN   5
+#define SENSOR_1_HUB_PIN   5
+#define SENSOR_2_HUB_PIN   6
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -39,11 +39,16 @@ TroykaI2CHub splitter;
 
  
 void setup() {
-  servo_0.write(servo_0_stop_speed);
   servo_0_mini.attach(mini_servo_0_pin);
   servo_1_mini.attach(mini_servo_1_pin);
   servo_2_mini.attach(mini_servo_2_pin);
+  
   servo_0.attach(servo_0_pin);
+  servo_0.write(servo_0_stop_speed);
+
+  servo_0_mini.write(180);
+  servo_1_mini.write(180);
+  servo_2_mini.write(180);
   
   pinMode(BUTTON_PIN, INPUT);
  // инициализируем датчик
@@ -66,15 +71,22 @@ while (1) {
 
   splitter.setBusChannel(SENSOR_2_HUB_PIN);
   RGB color_2 = colorSensor.colorRead();
+  
+  if (color_0.red == 0 and color_0.green == 0 and color_0.blue == 0) Serial.println(0);
+  if (color_1.red == 0 and color_1.green == 0 and color_1.blue == 0) Serial.println(1);
+  if (color_2.red == 0 and color_2.green == 0 and color_2.blue == 0) Serial.println(2);
 
   if (color_0.red != 0 and color_0.green != 0 and color_0.blue != 0 and color_1.red != 0 and color_1.green != 0 and color_1.blue != 0 and color_2.red != 0 and color_2.green != 0 and color_2.blue != 0) break;
 }
-analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков вкл
+analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков выкл
 analogWrite(LIGHT_SENSOR_1_PIN,0);
 analogWrite(LIGHT_SENSOR_2_PIN,0);
  
 }
 void loop() {
+  servo_0_mini.write(180);
+  servo_1_mini.write(180);
+  servo_2_mini.write(180);
   
   int buttonState = digitalRead(BUTTON_PIN);
   while (buttonState){
@@ -83,9 +95,15 @@ void loop() {
   }while (not buttonState){
     buttonState = digitalRead(BUTTON_PIN);
   }
+  int board[3][3] = { // очистка доски
+    {0, 0, 0},
+    {0, 0, 0},
+    {0, 0, 0}
+    };
+    
   scanBoard();
   servo_0.write(0);
-  delay (3300);
+  delay (3350);
   servo_0.write(servo_0_stop_speed);
 }
 
@@ -94,12 +112,6 @@ void scanBoard() {
      analogWrite(LIGHT_SENSOR_0_PIN,100); // подсветка датчиков вкл
      analogWrite(LIGHT_SENSOR_1_PIN,100);
      analogWrite(LIGHT_SENSOR_2_PIN,100);
-
-     int new_board[3][3] = { // создание новой доски для записи даныых сканировния
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0}
-    };
 
      servo_0.write(180); // двигаю 0 строчку к датчикам
      delay (900);
@@ -123,15 +135,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[0][0] = 0;
+      board[0][0] = 0;
      }
      if (green_average > color_value){ 
       Serial.print("1");
-      new_board[0][0] = 1;
+      board[0][0] = 1;
      }
      if (blue_average > color_value){
       Serial.print("2");
-      new_board[0][0] = 2;
+      board[0][0] = 2;
      }
      Serial.print('\t');
      
@@ -152,15 +164,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[0][1] = 0;
+      board[0][1] = 0;
      }
      if (green_average > color_value){ 
       Serial.print("1");
-      new_board[0][1] = 1;
+      board[0][1] = 1;
      }
      if (blue_average > color_value){
       Serial.print("2");
-      new_board[0][1] = 2;
+      board[0][1] = 2;
      }
      Serial.print('\t');
 
@@ -181,15 +193,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[0][2] = 0;
+      board[0][2] = 0;
      }
      if (green_average > color_value){ 
       Serial.print("1");
-      new_board[0][2] = 1;
+      board[0][2] = 1;
      }
      if (blue_average > color_value){
       Serial.print("2");
-      new_board[0][2] = 2;
+      board[0][2] = 2;
      }
      Serial.println('\t');
 
@@ -214,15 +226,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[1][0] = 0;
+      board[1][0] = 0;
      }
      if (green_average > color_value){ 
       Serial.print("1");
-      new_board[1][0] = 1;
+      board[1][0] = 1;
      }
      if (blue_average > color_value){
       Serial.print("2");
-      new_board[1][0] = 2;
+      board[1][0] = 2;
      }
      Serial.print('\t');
      
@@ -243,15 +255,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[1][1] = 0;
+      board[1][1] = 0;
      }
      if (green_average > color_value){ 
       Serial.print("1");
-      new_board[1][1] = 1;
+      board[1][1] = 1;
      }
      if (blue_average > color_value){
       Serial.print("2");
-      new_board[1][1] = 2;
+      board[1][1] = 2;
      }
      Serial.print('\t');
 
@@ -272,15 +284,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[1][2] = 0;
+      board[1][2] = 0;
      }
-     if (green_average > color_value){ 
+     else if (green_average > color_value){ 
       Serial.print("1");
-      new_board[1][2] = 1;
+      board[1][2] = 1;
      }
-     if (blue_average > color_value){
+     else if (blue_average > color_value){
       Serial.print("2");
-      new_board[1][2] = 2;
+      board[1][2] = 2;
      }
      Serial.println('\t');
 
@@ -305,15 +317,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[2][0] = 0;
+      board[2][0] = 0;
      }
-     if (green_average > color_value){ 
+     else if (green_average > color_value){ 
       Serial.print("1");
-      new_board[2][0] = 1;
+      board[2][0] = 1;
      }
-     if (blue_average > color_value){
+     else if (blue_average > color_value){
       Serial.print("2");
-      new_board[2][0] = 2;
+      board[2][0] = 2;
      }
      Serial.print('\t');
      
@@ -334,16 +346,16 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[2][1] = 0;
+      board[2][1] = 0;
 
      }
-     if (green_average > color_value){ 
+     else if (green_average > color_value){ 
       Serial.print("1");
-      new_board[2][1] = 1;
+      board[2][1] = 1;
      }
-     if (blue_average > color_value){
+     else if (blue_average > color_value){
       Serial.print("2");
-      new_board[2][1] = 2;
+      board[2][1] = 2;
      }
      Serial.print('\t');
 
@@ -364,15 +376,15 @@ void scanBoard() {
      // если преобладает какой-либо цвет, то записываю в массив и вывожу в консоль
      if (red_average > color_value){
       Serial.print("0");
-      new_board[2][2] = 0;
+      board[2][2] = 0;
      }
-     if (green_average > color_value){ 
+     else if (green_average > color_value){ 
       Serial.print("1");
-      new_board[2][2] = 1;
+      board[2][2] = 1;
      }
-     if (blue_average > color_value){
+     else if (blue_average > color_value){
       Serial.print("2");
-      new_board[2][2] = 2;
+      board[2][2] = 2;
      }
      Serial.println('\t');
      Serial.println('\t');
@@ -385,5 +397,77 @@ void scanBoard() {
      analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков вкл
      analogWrite(LIGHT_SENSOR_1_PIN,0);
      analogWrite(LIGHT_SENSOR_2_PIN,0);
-     
   }
+  
+  void makeStep(int step_i, int step_j){ // на вход поступет координата в которую нужно положить шарик
+    // поле должно находиться в крайнем дальнем положении(как после scanBoard)
+  if (step_i == 0){
+    servo_0.write(0);
+  delay (1600);
+  servo_0.write(servo_0_stop_speed);
+  delay(100);
+    if (step_j == 0){
+      servo_0_mini.write(0);
+      delay(500);
+      servo_0_mini.write(180);
+    }
+    else if (step_j == 1){
+      servo_1_mini.write(0);
+      delay(500);
+      servo_1_mini.write(180);
+    }
+    else if (step_j == 2){
+      servo_2_mini.write(0);
+      delay(500);
+      servo_2_mini.write(180);
+    }
+   servo_0.write(0);
+   delay (1850);
+   servo_0.write(servo_0_stop_speed);
+  }
+  else if (step_i == 1){
+    servo_0.write(0);
+  delay (800);
+  servo_0.write(servo_0_stop_speed);
+  delay(100);
+    if (step_j == 0){
+      servo_0_mini.write(0);
+      delay(500);
+      servo_0_mini.write(180);
+    }
+    else if (step_j == 1){
+      servo_1_mini.write(0);
+      delay(500);
+      servo_1_mini.write(180);
+    }
+    else if (step_j == 2){
+      servo_2_mini.write(0);
+      delay(500);
+      servo_2_mini.write(180);
+    }
+   servo_0.write(0);
+   delay (2640);
+   servo_0.write(servo_0_stop_speed);
+  }
+  else if (step_i == 2){
+  servo_0.write(servo_0_stop_speed);
+    if (step_j == 0){
+      servo_0_mini.write(0);
+      delay(500);
+      servo_0_mini.write(180);
+    }
+    else if (step_j == 1){
+      servo_1_mini.write(0);
+      delay(500);
+      servo_1_mini.write(180);
+    }
+    else if (step_j == 2){
+      servo_2_mini.write(0);
+      delay(500);
+      servo_2_mini.write(180);
+    }
+   servo_0.write(0);
+   delay (3240);
+   servo_0.write(servo_0_stop_speed);
+  }
+}
