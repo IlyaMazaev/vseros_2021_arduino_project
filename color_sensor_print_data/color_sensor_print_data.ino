@@ -420,7 +420,6 @@ void scanBoard() {
      servo_0.write(180);  // доводка поля до карйнего дальнего положения 
      delay (900);
      servo_0.write(servo_0_stop_speed);
-     delay (500);
 
      analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков вкл
      analogWrite(LIGHT_SENSOR_1_PIN,0);
@@ -542,77 +541,77 @@ void makeRandomStep() {
 
 void closeLineOfTwo() { 
     // если стоят 2 подряд фигуры игрока, то предотвращаем победу 
-    if (board[0][1] == 2 and board[0][2] == 2 or board[1][0] == 2 and board[2][0] == 2 or board[1][1] == 2 and board[2][2] == 2) {
+    if ((board[0][1] == 2 and board[0][2] == 2 or board[1][0] == 2 and board[2][0] == 2 or board[1][1] == 2 and board[2][2] == 2) and board[0][0] == 0) {
       step_pos[0] = 0;
       step_pos[1] = 0;
       }
-    else if (board[1][1] == 2 and board[2][1] == 2 or board[0][0] == 2 and board[0][2] == 2){
+    else if ((board[1][1] == 2 and board[2][1] == 2 or board[0][0] == 2 and board[0][2] == 2) and board[0][1] == 0){
       step_pos[0] = 0;
       step_pos[1] = 1;
     }
-   else if (board[0][0] == 2 and board[0][1] == 2 or board[1][2] == 2 and board[2][2] == 2 or board[1][1] == 2 and board[2][0] == 2) {
+   else if ((board[0][0] == 2 and board[0][1] == 2 or board[1][2] == 2 and board[2][2] == 2 or board[1][1] == 2 and board[2][0] == 2) and board[0][2] == 0) {
       step_pos[0] = 0;
       step_pos[1] = 2;
       }
-   else if (board[1][1] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[2][0] == 2){
+   else if ((board[1][1] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[2][0] == 2) and board[1][0] == 0){
       step_pos[0] = 1;
       step_pos[1] = 0;
       }
-    else if (board[1][0] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[2][2] == 2 or board[0][1] == 2 and board[2][1] == 2 or board[0][2] == 2 and board[2][0] == 2){
+    else if ((board[1][0] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[2][2] == 2 or board[0][1] == 2 and board[2][1] == 2 or board[0][2] == 2 and board[2][0] == 2) and board[1][1] == 0){
       step_pos[0] = 1;
       step_pos[1] = 1;
       }
-    else if (board[1][0] == 2 and board[1][1] == 2 or board[0][2] == 2 and board[2][2] == 2){
+    else if ((board[1][0] == 2 and board[1][1] == 2 or board[0][2] == 2 and board[2][2] == 2) and board[1][2] == 0){
       step_pos[0] = 1;
       step_pos[1] = 2;
       }
-    else if (board[2][1] == 2 and board[2][2] == 2 or board[1][0] == 2 and board[0][0] == 2 or board[1][1] == 2 and board[0][2] == 2){
+    else if ((board[2][1] == 2 and board[2][2] == 2 or board[1][0] == 2 and board[0][0] == 2 or board[1][1] == 2 and board[0][2] == 2) and board[2][0] == 0){
       step_pos[0] = 2;
       step_pos[1] = 0;
       }
-    else if (board[1][1] == 2 and board[0][1] == 2 or board[2][0] == 2 and board[2][2] == 2){
+    else if ((board[1][1] == 2 and board[0][1] == 2 or board[2][0] == 2 and board[2][2] == 2) and board[2][1] == 0){
       step_pos[0] = 2;
       step_pos[1] = 1;
       }
-    else if (board[2][0] == 2 and board[2][1] == 2 or board[0][2] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[1][1] == 2){
+    else if ((board[2][0] == 2 and board[2][1] == 2 or board[0][2] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[1][1] == 2)and board[2][2] == 0){
       step_pos[0] = 2;
       step_pos[1] = 2;
       }
 
      
-     else if (board[0][1] == 1 and board[0][2] == 1 or board[1][0] == 1 and board[2][0] == 1 or board[1][1] == 1 and board[2][2] == 1) {
+     else if ((board[0][1] == 1 and board[0][2] == 1 or board[1][0] == 1 and board[2][0] == 1 or board[1][1] == 1 and board[2][2] == 1) and board[0][0] == 0){
       step_pos[0] = 0;
       step_pos[1] = 0;
       }
-    else if (board[1][1] == 1 and board[2][1] == 1 or board[0][0] == 1 and board[0][2] == 1){
+    else if ((board[1][1] == 1 and board[2][1] == 1 or board[0][0] == 1 and board[0][2] == 1) and board[0][1] == 0){
       step_pos[0] = 0;
       step_pos[1] = 1;
     }
-   else if (board[0][0] == 1 and board[0][1] == 1 or board[1][2] == 1 and board[2][2] == 1 or board[1][1] == 1 and board[2][0] == 1) {
+   else if ((board[0][0] == 1 and board[0][1] == 1 or board[1][2] == 1 and board[2][2] == 1 or board[1][1] == 1 and board[2][0] == 1) and board[0][2] == 0){
       step_pos[0] = 0;
       step_pos[1] = 2;
       }
-   else if (board[1][1] == 1 and board[1][2] == 1 or board[0][0] == 1 and board[2][0] == 1){
+   else if ((board[1][1] == 1 and board[1][2] == 1 or board[0][0] == 1 and board[2][0] == 1) and board[1][0] == 0){
       step_pos[0] = 1;
       step_pos[1] = 0;
       }
-    else if (board[1][0] == 1 and board[1][2] == 1 or board[0][0] == 1 and board[2][2] == 1 or board[0][1] == 1 and board[2][1] or board[0][2] == 2 and board[2][0]){
+    else if ((board[1][0] == 1 and board[1][2] == 1 or board[0][0] == 1 and board[2][2] == 1 or board[0][1] == 1 and board[2][1] or board[0][2] == 2 and board[2][0]) and board[1][1] == 0){
       step_pos[0] = 1;
       step_pos[1] = 1;
       }
-    else if (board[1][0] == 1 and board[1][1] == 1 or board[0][2] == 1 and board[2][2] == 1){
+    else if ((board[1][0] == 1 and board[1][1] == 1 or board[0][2] == 1 and board[2][2] == 1) and board[1][2] == 0){
       step_pos[0] = 1;
       step_pos[1] = 2;
       }
-    else if (board[2][1] == 1 and board[2][2] == 1 or board[1][0] == 1 and board[0][0] == 1 or board[1][1] == 1 and board[0][2] == 1){
+    else if ((board[2][1] == 1 and board[2][2] == 1 or board[1][0] == 1 and board[0][0] == 1 or board[1][1] == 1 and board[0][2] == 1) and board[2][0] == 0){
       step_pos[0] = 2;
       step_pos[1] = 0;
       }
-    else if (board[1][1] == 1 and board[0][1] == 1 or board[2][0] == 1 and board[2][2] == 1){
+    else if ((board[1][1] == 1 and board[0][1] == 1 or board[2][0] == 1 and board[2][2] == 1) and board[2][1] == 0){
       step_pos[0] = 2;
       step_pos[1] = 1;
       }
-    else if (board[2][0] == 1 and board[2][1] == 1 or board[0][2] == 1 and board[1][2] == 1 or board[0][0] == 1 and board[1][1] == 1){
+    else if ((board[2][0] == 1 and board[2][1] == 1 or board[0][2] == 1 and board[1][2] == 1 or board[0][0] == 1 and board[1][1] == 1) and board[2][2] == 0){
       step_pos[0] = 2;
       step_pos[1] = 2;
       }
