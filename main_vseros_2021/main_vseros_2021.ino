@@ -22,7 +22,7 @@ void setup() {
   void closeLineOfTwo(); { 
     // если стоят 2 подряд фигуры игрока, то предотвращаем победу 
     if ((board[0][1] == 2) and (board[0][2] == 2)) or ((board[1][0] == 2) and (board[2][0] == 2)) or ((board[1][1] == 2) and (board[2][2] == 2)) board[0][0] = 1;
-    if ((board[1][1] == 2) and (board[2][1] == 2)) board[0][1] = 1;
+    if ((board[1][1] == 2) and (board[2][1] == 2)) or ((board[0][0] == 2) and (board[0][2] == 2)) board[0][1] = 1;
     if ((board[0][0] == 2) and (board[0][1] == 2)) or ((board[1][2] == 2) and (board[2][2] == 2)) or ((board[1][1] == 2) and (board[2][0] == 2)) board[0][2] = 1;
     if ((board[1][1] == 2) and (board[1][2] == 2)) board[1][0] = 1;
     if ((board[1][0] == 2) and (board[1][1] == 2) board[1][2] = 1;

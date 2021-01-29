@@ -27,8 +27,8 @@ Servo servo_0;
 #define LIGHT_SENSOR_2_PIN   7
 
 #define SENSOR_0_HUB_PIN   0 
-#define SENSOR_1_HUB_PIN   5
-#define SENSOR_2_HUB_PIN   6
+#define SENSOR_1_HUB_PIN   3
+#define SENSOR_2_HUB_PIN   4
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -36,6 +36,14 @@ TroykaColorSensor colorSensor;
 // создаём объект для работы с хабом
 // адрес по умолчанию 0x70
 TroykaI2CHub splitter;
+
+int board[3][3] = { // создание доски
+    {0, 0, 0},
+    {0, 0, 0},
+    {0, 0, 0}
+    };
+
+int step_pos[2] = {4, 4}; // координаты хода
 
  
 void setup() {
@@ -95,16 +103,14 @@ void loop() {
   }while (not buttonState){
     buttonState = digitalRead(BUTTON_PIN);
   }
-  int board[3][3] = { // очистка доски
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0}
-    };
+  
     
   scanBoard();
-  servo_0.write(0);
-  delay (3350);
-  servo_0.write(servo_0_stop_speed);
+  closeLineOfTwo();
+  Serial.print(step_pos[0]);
+  Serial.print(" ");
+  Serial.println(step_pos[1]);
+  makeStep(step_pos[0], step_pos[1]);
 }
 
 void scanBoard() {  
@@ -471,3 +477,43 @@ void scanBoard() {
    servo_0.write(servo_0_stop_speed);
   }
 }
+void closeLineOfTwo() { 
+    // если стоят 2 подряд фигуры игрока, то предотвращаем победу 
+    if (board[0][1] == 2 and board[0][2] == 2 or board[1][0] == 2 and board[2][0] == 2 or board[1][1] == 2 and board[2][2] == 2) {
+      step_pos[0] = 0;
+      step_pos[1] = 0;
+      }
+    else if (board[1][1] == 2 and board[2][1] == 2 or board[0][0] == 2 and board[0][2] == 2){
+      step_pos[0] = 0;
+      step_pos[1] = 1;
+    }
+   else if (board[0][0] == 2 and board[0][1] == 2 or board[1][2] == 2 and board[2][2] == 2 or board[1][1] == 2 and board[2][0] == 2) {
+      step_pos[0] = 0;
+      step_pos[1] = 2;
+      }
+   else if (board[1][1] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[2][0] == 2){
+      step_pos[0] = 1;
+      step_pos[1] = 0;
+      }
+    else if (board[1][0] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[2][2] or board[0][1] == 2 and board[2][1] or board[0][2] == 2 and board[2][0]){
+      step_pos[0] = 1;
+      step_pos[1] = 1;
+      }
+    else if (board[1][0] == 2 and board[1][1] == 2 or board[0][2] == 2 and board[2][2] == 2){
+      step_pos[0] = 1;
+      step_pos[1] = 2;
+      }
+    else if (board[2][1] == 2 and board[2][2] == 2 or board[1][0] == 2 and (board[0][0] == 2 or board[1][1] == 2 and board[0][2] == 2){
+      step_pos[0] = 2;
+      step_pos[1] = 0;
+      }
+    else if (board[1][1] == 2 and board[0][1] == 2 or board[2][0] == 2 and board[2][2] == 2){
+      step_pos[0] = 2;
+      step_pos[1] = 1;
+      }
+    else if (board[2][0] == 2 and board[2][1] == 2 or board[0][2] == 2 and board[1][2] == 2 or board[0][0] == 2 and board[1][1] == 2){
+      step_pos[0] = 2;
+      step_pos[1] = 2;
+      }
+    }
+  }
