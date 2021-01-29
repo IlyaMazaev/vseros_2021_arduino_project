@@ -27,8 +27,8 @@ Servo servo_0;
 #define LIGHT_SENSOR_2_PIN   7
 
 #define SENSOR_0_HUB_PIN   0 
-#define SENSOR_1_HUB_PIN   4
-#define SENSOR_2_HUB_PIN   7
+#define SENSOR_1_HUB_PIN   2
+#define SENSOR_2_HUB_PIN   6
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -67,6 +67,8 @@ void setup() {
 analogWrite(LIGHT_SENSOR_0_PIN,100); // подсветка датчиков вкл
 analogWrite(LIGHT_SENSOR_1_PIN,100);
 analogWrite(LIGHT_SENSOR_2_PIN,100);
+
+
 
 // цикл для определения ошибок в работе датчика
 // если датчик выдаёт 0 0 0, то из цикла программа не выйдет, пока он не запустится
@@ -522,6 +524,7 @@ bool checkWin(){
     
     if (board[0][0] == 2 and board[1][1] == 2 and board[2][2] == 2) return true;
     if (board[0][2] == 2 and board[1][1] == 2 and board[2][0] == 2) return true;
+    if (board[0][0] != 0 and board[0][1] != 0 and board[0][2] != 0 and board[1][0] != 0 and board[1][1] != 0 and board[1][2] != 0 and board[2][0] != 0 and board[2][1] != 0 and board[2][2] != 0) return true;
     return false;
 }
 
