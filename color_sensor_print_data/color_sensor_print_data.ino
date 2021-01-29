@@ -27,8 +27,8 @@ Servo servo_0;
 #define LIGHT_SENSOR_2_PIN   7
 
 #define SENSOR_0_HUB_PIN   0 
-#define SENSOR_1_HUB_PIN   3
-#define SENSOR_2_HUB_PIN   4
+#define SENSOR_1_HUB_PIN   2
+#define SENSOR_2_HUB_PIN   6
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -71,6 +71,8 @@ analogWrite(LIGHT_SENSOR_2_PIN,100);
 // цикл для определения ошибок в работе датчика
 // если датчик выдаёт 0 0 0, то из цикла программа не выйдет, пока он не запустится
 while (1) {
+  TroykaColorSensor colorSensor;
+  
   splitter.setBusChannel(SENSOR_0_HUB_PIN);
   RGB color_0 = colorSensor.colorRead();
 
@@ -103,14 +105,15 @@ void loop() {
   }while (not buttonState){
     buttonState = digitalRead(BUTTON_PIN);
   }
-  
-    
+   
   scanBoard();
-  closeLineOfTwo();
-  Serial.print(step_pos[0]);
-  Serial.print(" ");
-  Serial.println(step_pos[1]);
-  makeStep(step_pos[0], step_pos[1]);
+  if (not checkWin()){
+    closeLineOfTwo();
+    Serial.print(step_pos[0]);
+    Serial.print(" ");
+    Serial.println(step_pos[1]);
+    makeStep(step_pos[0], step_pos[1]);
+  }
 }
 
 void scanBoard() {  
@@ -477,6 +480,33 @@ void scanBoard() {
    servo_0.write(servo_0_stop_speed);
   }
 }
+
+bool checkWin(){  
+    // проверка на наличие победной комбинации из 3х на поле
+    if (board[0][0] == 1 and board[0][1] == 1 and board[0][2] == 1) return true;
+    if (board[1][0] == 1 and board[1][1] == 1 and board[1][2] == 1) return true;
+    if (board[2][0] == 1 and board[2][1] == 1 and board[2][2] == 1) return true;
+    
+    if (board[0][0] == 1 and board[1][0] == 1 and board[2][0] == 1) return true;
+    if (board[0][1] == 1 and board[1][1] == 1 and board[2][1] == 1) return true;
+    if (board[0][2] == 1 and board[1][2] == 1 and board[2][2] == 1) return true;
+    
+    if (board[0][0] == 1 and board[1][1] == 1 and board[2][2] == 1) return true;
+    if (board[0][2] == 1 and board[1][1] == 1 and board[2][0] == 1) return true;
+    
+    if (board[0][0] == 2 and board[0][1] == 2 and board[0][2] == 2) return true;
+    if (board[1][0] == 2 and board[1][1] == 2 and board[1][2] == 2) return true;
+    if (board[2][0] == 2 and board[2][1] == 2 and board[2][2] == 2) return true;
+    
+    if (board[0][0] == 2 and board[1][0] == 2 and board[2][0] == 2) return true;
+    if (board[0][1] == 2 and board[1][1] == 2 and board[2][1] == 2) return true;
+    if (board[0][2] == 2 and board[1][2] == 2 and board[2][2] == 2) return true;
+    
+    if (board[0][0] == 2 and board[1][1] == 2 and board[2][2] == 2) return true;
+    if (board[0][2] == 2 and board[1][1] == 2 and board[2][0] == 2) return true;
+    return false;
+}
+
 void closeLineOfTwo() { 
     // если стоят 2 подряд фигуры игрока, то предотвращаем победу 
     if (board[0][1] == 2 and board[0][2] == 2 or board[1][0] == 2 and board[2][0] == 2 or board[1][1] == 2 and board[2][2] == 2) {
