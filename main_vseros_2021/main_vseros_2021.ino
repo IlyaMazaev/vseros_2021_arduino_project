@@ -153,7 +153,6 @@ void scanBoard() {
      servo_0.write(180); // двигаю 0 строчку к датчикам
      delay (900);
      servo_0.write(servo_0_stop_speed);
-     delay (200);
      
      splitter.setBusChannel(SENSOR_0_HUB_PIN); // переключаю канал шины i2c на первый датчик
      int red_average = 0;
@@ -245,7 +244,6 @@ void scanBoard() {
      servo_0.write(180);  // двигаю следующую строчку
      delay (810);
      servo_0.write(servo_0_stop_speed);
-     delay (900);
 
      splitter.setBusChannel(SENSOR_0_HUB_PIN); // переключаю канал шины i2c на первый датчик
      red_average = 0;
@@ -336,7 +334,6 @@ void scanBoard() {
      servo_0.write(180);  // двигаю следующую строчку
      delay (810);
      servo_0.write(servo_0_stop_speed);
-     delay (900);
 
      splitter.setBusChannel(SENSOR_0_HUB_PIN); // переключаю канал шины i2c на первый датчик
      red_average = 0;
