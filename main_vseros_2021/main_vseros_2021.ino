@@ -133,6 +133,12 @@ void loop() {
    servo_0.write(0);
    delay (200);
    servo_0.write(servo_0_stop_speed);
+   servo_0.write(180);
+   delay (200);
+   servo_0.write(servo_0_stop_speed);
+   servo_0.write(0);
+   delay (200);
+   servo_0.write(servo_0_stop_speed);
   }
 }
 
