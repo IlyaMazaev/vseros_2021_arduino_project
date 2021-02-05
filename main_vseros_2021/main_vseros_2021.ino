@@ -18,7 +18,7 @@ Servo servo_0;
 
 #define BUTTON_PIN  10
 
-#define color_value 230  // нужно для логики определения цветов
+#define color_value 230  // пороговое значение определения цветов
 // если например color.blue > color_value , то я считаю, что показание датчика = синий цвет
 
 // пин подсветки светодиода
@@ -53,10 +53,6 @@ void setup() {
   
   servo_0.attach(servo_0_pin);
   servo_0.write(servo_0_stop_speed);
-
-  servo_0_mini.write(180);
-  servo_1_mini.write(180);
-  servo_2_mini.write(180);
   
   pinMode(BUTTON_PIN, INPUT);
  // инициализируем датчик
@@ -99,9 +95,9 @@ analogWrite(LIGHT_SENSOR_2_PIN,0);
 
 
 void loop() {
-  servo_0_mini.write(180);
-  servo_1_mini.write(180);
-  servo_2_mini.write(180);
+  servo_0_mini.write(0);
+  servo_1_mini.write(0);
+  servo_2_mini.write(0);
   
   int buttonState = digitalRead(BUTTON_PIN);
   // ожидание нажатия кнопки 
@@ -423,7 +419,7 @@ void scanBoard() {
      Serial.println('\t');
 
      servo_0.write(180);  // доводка поля до карйнего дальнего положения 
-     delay (900);
+     delay (800);
      servo_0.write(servo_0_stop_speed);
 
      analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков вкл
@@ -439,19 +435,19 @@ void scanBoard() {
   servo_0.write(servo_0_stop_speed);
   delay(100);
     if (step_j == 0){
-      servo_0_mini.write(0);
-      delay(500);
       servo_0_mini.write(180);
+      delay(500);
+      servo_0_mini.write(0);
     }
     else if (step_j == 1){
-      servo_1_mini.write(0);
-      delay(500);
       servo_1_mini.write(180);
+      delay(500);
+      servo_1_mini.write(0);
     }
     else if (step_j == 2){
-      servo_2_mini.write(0);
-      delay(500);
       servo_2_mini.write(180);
+      delay(500);
+      servo_2_mini.write(0);
     }
    servo_0.write(0);
    delay (1850);
@@ -463,19 +459,19 @@ void scanBoard() {
   servo_0.write(servo_0_stop_speed);
   delay(100);
     if (step_j == 0){
-      servo_0_mini.write(0);
-      delay(500);
       servo_0_mini.write(180);
+      delay(500);
+      servo_0_mini.write(0);
     }
     else if (step_j == 1){
-      servo_1_mini.write(0);
-      delay(500);
       servo_1_mini.write(180);
+      delay(500);
+      servo_1_mini.write(0);
     }
     else if (step_j == 2){
-      servo_2_mini.write(0);
-      delay(500);
       servo_2_mini.write(180);
+      delay(500);
+      servo_2_mini.write(0);
     }
    servo_0.write(0);
    delay (2640);
@@ -484,19 +480,19 @@ void scanBoard() {
   else if (step_i == 2){
   servo_0.write(servo_0_stop_speed);
     if (step_j == 0){
-      servo_0_mini.write(0);
-      delay(500);
       servo_0_mini.write(180);
+      delay(500);
+      servo_0_mini.write(0);
     }
     else if (step_j == 1){
-      servo_1_mini.write(0);
-      delay(500);
       servo_1_mini.write(180);
+      delay(500);
+      servo_1_mini.write(0);
     }
     else if (step_j == 2){
-      servo_2_mini.write(0);
-      delay(500);
       servo_2_mini.write(180);
+      delay(500);
+      servo_2_mini.write(0);
     }
    servo_0.write(0);
    delay (3240);
