@@ -18,6 +18,8 @@ Servo servo_0;
 
 #define BUTTON_PIN  10
 
+#define SOUND_PIN 7
+
 #define color_value 230  // пороговое значение определения цветов
 // если например color.blue > color_value , то я считаю, что показание датчика = синий цвет
 
@@ -52,7 +54,7 @@ void setup() {
   servo_2_mini.attach(mini_servo_2_pin);
   
   servo_0.attach(servo_0_pin);
-  servo_0.write(servo_0_stop_speed);
+  servo_0.write(servo_0_stop_speed);  // остановка привода поля
   
   pinMode(BUTTON_PIN, INPUT);
  // инициализируем датчик
@@ -89,6 +91,13 @@ while (1) {
 analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков выкл
 analogWrite(LIGHT_SENSOR_1_PIN,0);
 analogWrite(LIGHT_SENSOR_2_PIN,0);
+
+tone(SOUND_PIN, 440, 250);
+delay(250);
+tone(SOUND_PIN, 165, 250);
+delay(250);
+tone(5, 440, 250);
+delay(250);
  
 }
 
