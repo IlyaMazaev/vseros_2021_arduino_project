@@ -3,9 +3,9 @@
 // библиотека для работы с датчиком цвета
 #include <TroykaColorSensor.h>
 #include <Servo.h>
-# define mini_servo_0_pin 13
+# define mini_servo_0_pin 11
 # define mini_servo_1_pin 12
-# define mini_servo_2_pin 11
+# define mini_servo_2_pin 13
 
 # define servo_0_pin 3
 # define servo_0_stop_speed 89
@@ -20,7 +20,7 @@ Servo servo_0;
 
 #define SOUND_PIN 7
 
-#define color_value 230  // пороговое значение определения цветов
+#define color_value 240  // пороговое значение определения цветов
 // если например color.blue > color_value , то я считаю, что показание датчика = синий цвет
 
 // пин подсветки светодиода
@@ -30,7 +30,7 @@ Servo servo_0;
 
 #define SENSOR_0_HUB_PIN   0 
 #define SENSOR_1_HUB_PIN   2
-#define SENSOR_2_HUB_PIN   6
+#define SENSOR_2_HUB_PIN   5
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -52,6 +52,10 @@ void setup() {
   servo_0_mini.attach(mini_servo_0_pin);
   servo_1_mini.attach(mini_servo_1_pin);
   servo_2_mini.attach(mini_servo_2_pin);
+
+  servo_0_mini.write(0);
+  servo_1_mini.write(0);
+  servo_2_mini.write(0);
   
   servo_0.attach(servo_0_pin);
   servo_0.write(servo_0_stop_speed);  // остановка привода поля
@@ -92,13 +96,14 @@ analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков вык
 analogWrite(LIGHT_SENSOR_1_PIN,0);
 analogWrite(LIGHT_SENSOR_2_PIN,0);
 
-tone(SOUND_PIN, 440, 250);
+
+tone(SOUND_PIN, 523, 150);
 delay(250);
-tone(SOUND_PIN, 165, 250);
+tone(SOUND_PIN, 659, 150);
 delay(250);
-tone(5, 440, 250);
+tone(SOUND_PIN, 784, 150);
 delay(250);
- 
+tone(SOUND_PIN, 523, 200);
 }
 
 
@@ -118,6 +123,7 @@ void loop() {
   while (not buttonState){
     buttonState = digitalRead(BUTTON_PIN);
   }
+  tone(SOUND_PIN, 494, 100);
    
   scanBoard(); // сканирование поля
   if (not checkWin()){  // если на поле нет победы
@@ -133,17 +139,38 @@ void loop() {
    delay (3240);
    servo_0.write(servo_0_stop_speed);
    servo_0.write(180);
-   delay (200);
+   tone(SOUND_PIN,1318,150);
+   delay (150);
    servo_0.write(servo_0_stop_speed);
    servo_0.write(0);
-   delay (200);
+   tone(SOUND_PIN,1318,300);
+   delay(150);
    servo_0.write(servo_0_stop_speed);
+   delay(150);
    servo_0.write(180);
-   delay (200);
+   tone(SOUND_PIN,1318,150);
+  delay(300);
    servo_0.write(servo_0_stop_speed);
-   servo_0.write(0);
-   delay (200);
+   tone(SOUND_PIN,1046,150);
+    delay(150);
    servo_0.write(servo_0_stop_speed);
+
+   tone(SOUND_PIN,1318,300);
+  servo_0.write(0);
+  delay(300);
+  servo_0.write(servo_0_stop_speed);
+  tone(SOUND_PIN,1568,600);
+  delay(600);
+  tone(SOUND_PIN,784,600);
+  servo_0.write(0);
+  delay(200);
+  servo_0.write(servo_0_stop_speed);
+
+
+
+
+
+
   }
 }
 
@@ -244,6 +271,13 @@ void scanBoard() {
       Serial.print("2");
       board[0][2] = 2;
      }
+     Serial.print(red_average);
+     Serial.print(' ');
+     Serial.print(green_average);
+     Serial.print(' ');
+     Serial.print(blue_average);
+     Serial.print(' ');
+     
      Serial.println('\t');
 
      servo_0.write(180);  // двигаю следующую строчку
@@ -334,6 +368,13 @@ void scanBoard() {
       Serial.print("2");
       board[1][2] = 2;
      }
+     Serial.print(red_average);
+     Serial.print(' ');
+     Serial.print(green_average);
+     Serial.print(' ');
+     Serial.print(blue_average);
+     Serial.print(' ');
+     
      Serial.println('\t');
 
      servo_0.write(180);  // двигаю следующую строчку
@@ -424,6 +465,13 @@ void scanBoard() {
       Serial.print("2");
       board[2][2] = 2;
      }
+     Serial.print(red_average);
+     Serial.print(' ');
+     Serial.print(green_average);
+     Serial.print(' ');
+     Serial.print(blue_average);
+     Serial.print(' ');
+     
      Serial.println('\t');
      Serial.println('\t');
 
