@@ -26,11 +26,11 @@ Servo servo_0;
 // пин подсветки светодиода
 #define LIGHT_SENSOR_0_PIN   5 
 #define LIGHT_SENSOR_1_PIN   6
-#define LIGHT_SENSOR_2_PIN   7
+#define LIGHT_SENSOR_2_PIN   8
 
-#define SENSOR_0_HUB_PIN   0 
+#define SENSOR_0_HUB_PIN   0
 #define SENSOR_1_HUB_PIN   2
-#define SENSOR_2_HUB_PIN   5
+#define SENSOR_2_HUB_PIN   4
 
 // создаём объект для работы с датчиком
 TroykaColorSensor colorSensor;
@@ -61,14 +61,18 @@ void setup() {
   servo_0.write(servo_0_stop_speed);  // остановка привода поля
   
   pinMode(BUTTON_PIN, INPUT);
+  pinMode(LIGHT_SENSOR_0_PIN, OUTPUT);
+  pinMode(LIGHT_SENSOR_1_PIN, OUTPUT); 
+  pinMode(LIGHT_SENSOR_2_PIN, OUTPUT);  
  // инициализируем датчик
  colorSensor.begin();
  // открываем Serial-порт
  Serial.begin(9600);
 
-analogWrite(LIGHT_SENSOR_0_PIN,100); // подсветка датчиков вкл
-analogWrite(LIGHT_SENSOR_1_PIN,100);
-analogWrite(LIGHT_SENSOR_2_PIN,100);
+digitalWrite(LIGHT_SENSOR_0_PIN,HIGH); // подсветка датчиков вкл
+digitalWrite(LIGHT_SENSOR_1_PIN,HIGH);
+digitalWrite(LIGHT_SENSOR_2_PIN,HIGH);
+Serial.println(123);
 
 
 
@@ -86,15 +90,35 @@ while (1) {
   splitter.setBusChannel(SENSOR_2_HUB_PIN);
   RGB color_2 = colorSensor.colorRead();
   
-  if (color_0.red == 0 and color_0.green == 0 and color_0.blue == 0) Serial.println(0);
-  if (color_1.red == 0 and color_1.green == 0 and color_1.blue == 0) Serial.println(1);
-  if (color_2.red == 0 and color_2.green == 0 and color_2.blue == 0) Serial.println(2);
+  if (color_0.red == 0 and color_0.green == 0 and color_0.blue == 0){
+    Serial.println(0);
+    digitalWrite(LIGHT_SENSOR_0_PIN,LOW);
+  }
+  if (color_1.red == 0 and color_1.green == 0 and color_1.blue == 0){
+    Serial.println(1);
+    digitalWrite(LIGHT_SENSOR_1_PIN,LOW);
+  }
+  if (color_2.red == 0 and color_2.green == 0 and color_2.blue == 0){
+    Serial.println(2);
+    digitalWrite(LIGHT_SENSOR_2_PIN,LOW);
+  }
 
-  if (color_0.red != 0 and color_0.green != 0 and color_0.blue != 0 and color_1.red != 0 and color_1.green != 0 and color_1.blue != 0 and color_2.red != 0 and color_2.green != 0 and color_2.blue != 0) break;
-}
-analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков выкл
-analogWrite(LIGHT_SENSOR_1_PIN,0);
-analogWrite(LIGHT_SENSOR_2_PIN,0);
+  if (color_0.red != 0 and color_0.green != 0 and color_0.blue != 0 and color_1.red != 0 and color_1.green != 0 and color_1.blue != 0 and color_2.red != 0 and color_2.green != 0 and color_2.blue != 0){
+    Serial.print(color_0.red + color_0.green + color_0.blue);
+Serial.print("\t");
+Serial.print(color_1.red + color_1.green + color_1.blue);
+Serial.print("\t");
+Serial.println(color_2.red + color_2.green + color_2.blue);
+    break;
+  }
+  }
+
+
+digitalWrite(LIGHT_SENSOR_0_PIN,LOW); // подсветка датчиков выкл
+digitalWrite(LIGHT_SENSOR_1_PIN,LOW);
+digitalWrite(LIGHT_SENSOR_2_PIN,LOW);
+
+
 
 
 tone(SOUND_PIN, 523, 150);
@@ -135,19 +159,19 @@ void loop() {
     makeStep(step_pos[0], step_pos[1]);  // кладу шарик в нужную клетку
   }
   else{
-   servo_0.write(0);  // если есть победа, то поле возвращается в крайнее ближнее положение
+   servo_0.write(180);  // если есть победа, то поле возвращается в крайнее ближнее положение
    delay (3240);
    servo_0.write(servo_0_stop_speed);
-   servo_0.write(180);
+   servo_0.write(0);
    tone(SOUND_PIN,1318,150);
    delay (150);
    servo_0.write(servo_0_stop_speed);
-   servo_0.write(0);
+   servo_0.write(180);
    tone(SOUND_PIN,1318,300);
    delay(150);
    servo_0.write(servo_0_stop_speed);
    delay(150);
-   servo_0.write(180);
+   servo_0.write(0);
    tone(SOUND_PIN,1318,150);
   delay(300);
    servo_0.write(servo_0_stop_speed);
@@ -156,13 +180,13 @@ void loop() {
    servo_0.write(servo_0_stop_speed);
 
    tone(SOUND_PIN,1318,300);
-  servo_0.write(0);
+  servo_0.write(180);
   delay(300);
   servo_0.write(servo_0_stop_speed);
   tone(SOUND_PIN,1568,600);
   delay(600);
   tone(SOUND_PIN,784,600);
-  servo_0.write(0);
+  servo_0.write(180);
   delay(200);
   servo_0.write(servo_0_stop_speed);
 
@@ -178,11 +202,11 @@ void loop() {
 
 void scanBoard() {  
     // сканирование поля и его перезапись(поле должно находиться в крайнем нижнем положении)
-     analogWrite(LIGHT_SENSOR_0_PIN,100); // подсветка датчиков вкл
-     analogWrite(LIGHT_SENSOR_1_PIN,100);
-     analogWrite(LIGHT_SENSOR_2_PIN,100);
+     digitalWrite(LIGHT_SENSOR_0_PIN,HIGH); // подсветка датчиков вкл
+     digitalWrite(LIGHT_SENSOR_1_PIN,HIGH);
+     digitalWrite(LIGHT_SENSOR_2_PIN,HIGH);
 
-     servo_0.write(180); // двигаю 0 строчку к датчикам
+     servo_0.write(0); // двигаю 0 строчку к датчикам
      delay (900);
      servo_0.write(servo_0_stop_speed);
      
@@ -280,7 +304,7 @@ void scanBoard() {
      
      Serial.println('\t');
 
-     servo_0.write(180);  // двигаю следующую строчку
+     servo_0.write(0);  // двигаю следующую строчку
      delay (810);
      servo_0.write(servo_0_stop_speed);
 
@@ -377,7 +401,7 @@ void scanBoard() {
      
      Serial.println('\t');
 
-     servo_0.write(180);  // двигаю следующую строчку
+     servo_0.write(0);  // двигаю следующую строчку
      delay (810);
      servo_0.write(servo_0_stop_speed);
 
@@ -475,19 +499,19 @@ void scanBoard() {
      Serial.println('\t');
      Serial.println('\t');
 
-     servo_0.write(180);  // доводка поля до карйнего дальнего положения 
+     servo_0.write(0);  // доводка поля до карйнего дальнего положения 
      delay (800);
      servo_0.write(servo_0_stop_speed);
 
-     analogWrite(LIGHT_SENSOR_0_PIN,0); // подсветка датчиков вкл
-     analogWrite(LIGHT_SENSOR_1_PIN,0);
-     analogWrite(LIGHT_SENSOR_2_PIN,0);
+     digitalWrite(LIGHT_SENSOR_0_PIN,LOW); // подсветка датчиков вкл
+     digitalWrite(LIGHT_SENSOR_1_PIN,LOW);
+     digitalWrite(LIGHT_SENSOR_2_PIN,LOW);
   }
   
   void makeStep(int step_i, int step_j){ // на вход поступет координата в которую нужно положить шарик
     // поле должно находиться в крайнем дальнем положении(как после scanBoard)
   if (step_i == 0){
-    servo_0.write(0);
+    servo_0.write(180);
   delay (1600);
   servo_0.write(servo_0_stop_speed);
   delay(100);
@@ -506,12 +530,12 @@ void scanBoard() {
       delay(500);
       servo_2_mini.write(0);
     }
-   servo_0.write(0);
+   servo_0.write(180);
    delay (1850);
    servo_0.write(servo_0_stop_speed);
   }
   else if (step_i == 1){
-    servo_0.write(0);
+    servo_0.write(180);
   delay (800);
   servo_0.write(servo_0_stop_speed);
   delay(100);
@@ -530,7 +554,7 @@ void scanBoard() {
       delay(500);
       servo_2_mini.write(0);
     }
-   servo_0.write(0);
+   servo_0.write(180);
    delay (2640);
    servo_0.write(servo_0_stop_speed);
   }
@@ -551,7 +575,7 @@ void scanBoard() {
       delay(500);
       servo_2_mini.write(0);
     }
-   servo_0.write(0);
+   servo_0.write(180);
    delay (3240);
    servo_0.write(servo_0_stop_speed);
   }
